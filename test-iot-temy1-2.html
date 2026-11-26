@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Iot_temy1,2 · test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@600;700;800&family=Manrope:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F1; --surface:#FFFFFF; --ink:#151A18; --ink-2:#2F3A34; --muted:#59635E;
+  --line:#DFE4DE; --line-soft:#ECEFE9;
+  --primary:#4E7A16; --primary-soft:#E7F0D7; --primary-deep:#3C5E11; --on-primary:#FFFFFF;
+  --amber:#B1521A; --amber-soft:#FBE7D6;
+  --ok:#1E7A4B; --ok-soft:#D9EFE3;
+  --no:#B02A37; --no-soft:#FBE0E2;
+  --sans:'Manrope',system-ui,sans-serif;
+  --head:'Chivo','Manrope',system-ui,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0E1412; --surface:#19201C; --ink:#E7EBE5; --ink-2:#C3CCC2; --muted:#8D9A8B;
+    --line:#2A332A; --line-soft:#212A21;
+    --primary:#A6CE6B; --primary-soft:#243018; --primary-deep:#BCDD86; --on-primary:#101609;
+    --amber:#E08A4B; --amber-soft:#3A2213;
+    --ok:#4FBE86; --ok-soft:#133A28;
+    --no:#EE8088; --no-soft:#3A1A1E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1412; --surface:#19201C; --ink:#E7EBE5; --ink-2:#C3CCC2; --muted:#8D9A8B;
+  --line:#2A332A; --line-soft:#212A21; --primary:#A6CE6B; --primary-soft:#243018;
+  --primary-deep:#BCDD86; --on-primary:#101609; --amber:#E08A4B; --amber-soft:#3A2213;
+  --ok:#4FBE86; --ok-soft:#133A28; --no:#EE8088; --no-soft:#3A1A1E;
+}
+:root[data-theme="light"]{
+  --bg:#F2F4F1; --surface:#FFFFFF; --ink:#151A18; --ink-2:#2F3A34; --muted:#59635E;
+  --line:#DFE4DE; --line-soft:#ECEFE9; --primary:#4E7A16; --primary-soft:#E7F0D7;
+  --primary-deep:#3C5E11; --on-primary:#FFFFFF; --amber:#B1521A; --amber-soft:#FBE7D6;
+  --ok:#1E7A4B; --ok-soft:#D9EFE3; --no:#B02A37; --no-soft:#FBE0E2;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+
+/* ---------- hlavička ---------- */
+header.top{background:linear-gradient(140deg,#0F161B 0%,#24323F 58%,#3C5768 100%);color:#fff;
+  padding:40px 0 30px}
+.eyebrow{font-family:var(--head);font-size:.75rem;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:#B6DE6A}
+.eyebrow b{color:#fff;font-weight:600}
+h1{font-family:var(--head);font-weight:700;font-size:clamp(1.75rem,4.6vw,2.5rem);line-height:1.1;
+  letter-spacing:-.02em;margin:.35em 0 0;text-wrap:balance}
+.lede{color:#AEC0CC;margin:.7em 0 0;max-width:62ch;font-size:.98rem}
+.pts{display:flex;gap:24px;flex-wrap:wrap;margin-top:20px;padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.16);font-family:var(--mono);font-size:.78rem;color:#8FA6B4}
+.pts b{font-family:var(--head);color:#fff;font-size:1.2rem;display:block;line-height:1.2}
+
+.ident{display:grid;grid-template-columns:1.6fr 1fr .9fr;gap:16px;margin-top:22px;
+  padding-top:20px;border-top:1px solid rgba(255,255,255,.16)}
+@media(max-width:640px){.ident{grid-template-columns:1fr}}
+.field label{display:block;font-family:var(--mono);font-size:.67rem;letter-spacing:.12em;
+  text-transform:uppercase;color:#8FA6B4;margin-bottom:6px}
+.field input{width:100%;font-family:var(--sans);font-size:1.02rem;color:#fff;
+  background:transparent;border:0;border-bottom:2px solid rgba(255,255,255,.3);padding:5px 2px;
+  border-radius:0;transition:border-color .15s}
+.field input:focus{outline:none;border-bottom-color:#fff}
+.field input:not(:placeholder-shown){border-bottom-color:rgba(255,255,255,.7)}
+.field input::-webkit-calendar-picker-indicator{filter:invert(1)}
+.field.missing input{border-bottom-color:#FF9AA3}
+.note-missing{display:none;color:#FF9AA3;font-size:.85rem;margin-top:6px}
+.field.missing .note-missing{display:block}
+
+/* ---------- lišta ---------- */
+.bar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line);
+  box-shadow:0 1px 3px rgba(21,26,24,.08)}
+.bar-in{display:flex;align-items:center;gap:14px;padding:11px 0;flex-wrap:wrap}
+.count{font-family:var(--mono);font-size:.82rem;color:var(--muted);white-space:nowrap}
+.count b{color:var(--ink)}
+.track{flex:1;min-width:100px;height:6px;background:var(--line-soft);border-radius:100px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--primary);transition:width .3s}
+.fill.done{background:var(--ok)}
+.btn{font-family:var(--head);font-size:.9rem;font-weight:600;border:1px solid var(--primary);
+  background:var(--primary);color:var(--on-primary);padding:9px 18px;border-radius:9px;
+  cursor:pointer;transition:.15s}
+.btn:hover{background:var(--primary-deep);border-color:var(--primary-deep)}
+.btn:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.btn.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+.btn.ghost:hover{background:transparent;color:var(--ink);border-color:var(--ink-2)}
+.btn:disabled{opacity:.5;cursor:default}
+.lockmsg{display:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--no);background:var(--no-soft);padding:5px 11px;
+  border-radius:100px;white-space:nowrap}
+.lockmsg.on{display:inline-block}
+
+/* ---------- časomiera ---------- */
+.clock{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.95rem;
+  font-weight:600;color:var(--ink);background:var(--line-soft);border:1px solid var(--line);
+  padding:5px 13px;border-radius:100px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.clock .ic{font-size:.9em;line-height:1}
+.clock.warn{color:var(--amber);background:var(--amber-soft);border-color:var(--amber)}
+.clock.crit{color:var(--no);background:var(--no-soft);border-color:var(--no);animation:tick 1s steps(2) infinite}
+.clock.off{color:var(--muted);background:transparent;animation:none}
+@keyframes tick{50%{opacity:.55}}
+
+/* ---------- obsah ---------- */
+main{padding:30px 0 0}
+section{margin-bottom:42px}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:9px;margin-bottom:8px}
+.sec-mark{font-family:var(--mono);font-weight:600;font-size:1.3rem;color:var(--primary);line-height:1}
+.sec-head h2{font-family:var(--head);font-weight:600;font-size:1.28rem;letter-spacing:-.01em;
+  margin:0;flex:1;text-wrap:balance}
+.score{font-family:var(--mono);font-size:.76rem;letter-spacing:.05em;color:var(--muted);
+  white-space:nowrap;padding:2px 9px;border:1px solid var(--line);border-radius:100px}
+.score.on{color:var(--ink);border-color:var(--ink-2)}
+.howto{color:var(--muted);font-size:.92rem;margin:0 0 18px;max-width:68ch}
+
+.warn{font-size:.9rem;color:var(--ink-2);background:var(--amber-soft);border:1px solid var(--amber);
+  border-left-width:4px;border-radius:var(--r);padding:12px 16px;margin:0 0 26px}
+.warn b{color:var(--amber)}
+
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 18px;margin-bottom:11px}
+.q.ok{border-left:4px solid var(--ok)}
+.q.bad{border-left:4px solid var(--no)}
+.q .qh{display:flex;gap:10px;align-items:baseline;margin-bottom:10px}
+.q .qn{font-family:var(--mono);font-size:.74rem;font-weight:600;background:var(--primary-soft);
+  color:var(--primary);padding:3px 9px;border-radius:100px;flex-shrink:0}
+.q .qt{font-weight:500;flex:1}
+
+.textrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.textrow input{font-family:var(--sans);font-size:1rem;width:260px;max-width:100%;padding:9px 12px;
+  border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink)}
+.textrow input:focus{outline:2px solid var(--primary);outline-offset:1px}
+.gap{font-family:var(--mono);font-weight:600;color:var(--primary);letter-spacing:.06em}
+
+/* ---------- opakovanie: správna odpoveď ---------- */
+.corr{display:none;margin-top:10px;padding:9px 12px;border-radius:9px;background:var(--ok-soft);
+  border:1px solid var(--ok);font-size:.9rem}
+.corr.on{display:block}
+.corr b{font-weight:600}
+.corr .why{display:block;color:var(--ink-2);font-size:.86rem;margin-top:3px}
+
+/* ---------- výsledok ---------- */
+.result{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:24px;margin-bottom:28px;display:none}
+.result.on{display:block}
+.result h3{font-family:var(--head);font-size:1.2rem;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:13px;margin-bottom:16px}
+.tile{border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+.tile span{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:2px}
+.tile b{font-family:var(--head);font-size:1.75rem;font-weight:700;line-height:1.2;display:block}
+.tile.g b{color:var(--ok)}
+.tile.p b{color:var(--primary)}
+.brk{font-family:var(--mono);font-size:.85rem;color:var(--ink-2);display:grid;gap:4px}
+.brk div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dotted var(--line);
+  padding-bottom:3px}
+.result p.hint{color:var(--muted);font-size:.9rem;margin:16px 0 0}
+.repeat{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.repeat h4{font-family:var(--head);font-size:1rem;margin:0 0 .5em}
+.repeat ul{margin:0;padding-left:1.2em;font-size:.92rem;color:var(--ink-2)}
+.repeat li{margin-bottom:.25em}
+.repeat .allok{font-size:.92rem;color:var(--ok)}
+
+footer.end{background:var(--surface);border-top:1px solid var(--line);padding:28px 0 40px;margin-top:14px}
+footer.end h3{font-family:var(--head);font-size:1.12rem;margin:0 0 .35em}
+footer.end p{color:var(--ink-2);margin:0;max-width:64ch;font-size:.95rem}
+footer.end a{color:var(--primary)}
+.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.hint-link{background:none;border:0;color:var(--muted);font:inherit;font-size:.87rem;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;padding:4px}
+.hint-link:hover{color:var(--ink)}
+.fallback{display:none;margin-top:16px}
+.fallback.on{display:block}
+.fallback textarea{width:100%;height:210px;font-family:var(--mono);font-size:.8rem;padding:11px;
+  border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink)}
+.credit{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin-top:22px}
+.credit a{color:var(--primary)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,18px);z-index:60;
+  background:var(--ink);color:var(--bg);font-size:.9rem;padding:11px 18px;border-radius:8px;
+  box-shadow:0 8px 26px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:.25s;max-width:88vw}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  .bar,.actions,.fallback,.toast,.warn{display:none!important}
+  body{background:#fff;font-size:11pt}
+  .q,.result{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">Internet vecí · poznámky · <b>dopisovanie slov</b></p>
+    <h1>Iot_temy1,2</h1>
+    <p class="lede">Učivo z poznámok „IoT a ESP32“, témy 1 a 2: čo je internet vecí, tri schopnosti IoT zariadenia, história, oblasti použitia, riziká, štyri vrstvy IoT systému, senzory a aktory, komunikačné technológie, protokoly a bezpečnosť. Hardvér ESP32, piny ani programovanie v teste nie sú. Všetky úlohy sú dopisovanie jedného slova, skratky alebo čísla – bez možností na výber a bez nápovedí. Vyhodnotí sa všetko naraz až po ukončení testu alebo po vypršaní času.</p>
+    <div class="pts">
+      <div><b>3</b> časti A – C</div>
+      <div><b>28</b> otázok</div>
+      <div><b>28</b> bodov spolu</div>
+      <div><b>35</b> minút na vyriešenie</div>
+    </div>
+    <div class="ident">
+      <div class="field" id="f-meno">
+        <label for="meno">Meno a priezvisko</label>
+        <input id="meno" type="text" placeholder=" " autocomplete="name" spellcheck="false">
+        <p class="note-missing">Meno chýba – bez neho sa dokument neoznačí.</p>
+      </div>
+      <div class="field">
+        <label for="trieda">Trieda</label>
+        <input id="trieda" type="text" placeholder=" " spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="datum">Dátum</label>
+        <input id="datum" type="date">
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="bar">
+  <div class="wrap bar-in">
+    <span class="clock" id="clock" title="Čas do automatického uzamknutia testu"><span class="ic">⏱</span><span id="clockv">35:00</span></span>
+    <span class="count"><b id="done">0</b> / <span id="total">28</span> zodpovedaných</span>
+    <span class="track"><span class="fill" id="fill"></span></span>
+    <span class="lockmsg" id="lockmsg">Test je uzamknutý</span>
+    <button class="btn ghost" id="reset" type="button">Vymazať</button>
+    <button class="btn" id="check" type="button">Ukončiť a vyhodnotiť</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <div class="result" id="result">
+    <h3>Vyhodnotenie</h3>
+    <div class="grid">
+      <div class="tile g"><span>Body A–C</span><b id="r-body">0 / 28</b></div>
+      <div class="tile"><span>Úspešnosť</span><b id="r-pct">0 %</b></div>
+      <div class="tile p"><span>Známka</span><b id="r-znamka">–</b></div>
+      <div class="tile"><span>Čas</span><b id="r-cas">–</b></div>
+    </div>
+    <div class="brk" id="r-brk"></div>
+    <div class="repeat" id="r-rep"></div>
+    <p class="hint">Test je uzamknutý, odpovede sa už nedajú meniť. Pri nesprávnych odpovediach je priamo v otázke doplnená správna odpoveď aj krátke vysvetlenie. Zostáva stiahnuť test ako dokument Wordu a odovzdať podľa pokynov vyučujúcej.</p>
+  </div>
+
+  <p class="warn" id="warn"><b>Na test je 35 minút a vyhodnotiť sa dá až na konci.</b> Priebežná kontrola odpovedí nie je možná. Po vypršaní času sa test uzamkne a vyhodnotí sám, aj keď nie je dokončený – čas v lište vľavo beží od prvého otvorenia. Tlačidlo <b>Ukončiť a vyhodnotiť</b> sa stláča až vtedy, keď je test hotový. Rozpracované odpovede sa v prehliadači priebežne ukladajú, takže sa nestratia ani pri zatvorení okna.</p>
+
+  <section id="sec-a">
+    <div class="sec-head"><span class="sec-mark">A</span>
+      <h2>Úvod do IoT</h2><span class="score" id="s-a">9 bodov</span></div>
+    <p class="howto">Do políčka sa dopíše jedno chýbajúce slovo, skratka alebo číslo. Veľké a malé písmená ani diakritika nerozhodujú a drobná pravopisná chyba sa uznáva – rozhoduje len to, či je pojem správny.</p>
+    <div id="lista"></div>
+  </section>
+
+  <section id="sec-b">
+    <div class="sec-head"><span class="sec-mark">B</span>
+      <h2>Vrstvy IoT systému, senzory a aktory</h2><span class="score" id="s-b">9 bodov</span></div>
+    <p class="howto">Rovnaký postup: jedno slovo alebo číslo do políčka.</p>
+    <div id="listb"></div>
+  </section>
+
+  <section id="sec-c">
+    <div class="sec-head"><span class="sec-mark">C</span>
+      <h2>Komunikačné technológie, protokoly a bezpečnosť</h2><span class="score" id="s-c">10 bodov</span></div>
+    <p class="howto">Rovnaký postup: jedno slovo, skratka alebo číslo do políčka. Názvy technológií a protokolov sa píšu tak, ako sú v poznámkach.</p>
+    <div id="listc"></div>
+  </section>
+
+</main>
+
+<footer class="end">
+  <div class="wrap">
+    <h3>Odovzdanie</h3>
+    <p>Po ukončení testu sa výsledok stiahne ako súbor <code>.doc</code>, otvorí sa vo Worde a odovzdá podľa pokynov vyučujúcej. V dokumente je meno, trieda, dátum, bodové vyhodnotenie, celé znenie odpovedí aj správne odpovede k tým, ktoré boli nesprávne. Sťahovanie je prístupné až po ukončení testu.</p>
+    <div class="actions">
+      <button class="btn" id="export2" type="button">Ukončiť a stiahnuť ako Word</button>
+      <button class="hint-link" id="showfb" type="button">Nestiahlo sa? Zobraziť text na skopírovanie</button>
+    </div>
+    <div class="fallback" id="fb">
+      <textarea id="fbtext" readonly aria-label="Text testu na skopírovanie"></textarea>
+    </div>
+    <p class="credit"><a href="../index.html">← Internet vecí</a> · <a href="../poznamky-iot-esp32.html">poznámky IoT a ESP32</a> · Spojená škola Nižná</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================= pomôcky ================= */
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const el = id => document.getElementById(id);
+const RE_DIAK = /[̀-ͯ]/g;
+
+/* ---- porovnávanie vpísaných slov ----------------------------------------
+   Odpoveď sa uzná bez ohľadu na veľkosť písmen, diakritiku, medzery
+   a pomlčky; navyše sa odpustí jedna až dve pravopisné chyby podľa dĺžky
+   slova. Nestačí to však na zámenu dvoch rôznych pojmov – strážny krok
+   nižšie takú odpoveď zamietne.
+   ---------------------------------------------------------------------- */
+const SKEY = 0x2B;
+const dek = a => a.map((n,i) => String.fromCharCode(n ^ (SKEY + i))).join("");
+const norm = s => String(s).normalize("NFD").replace(RE_DIAK,"")
+  .toLowerCase().replace(/[^a-z0-9]+/g,"");
+function lev(a, b){
+  const m = a.length, n = b.length;
+  if(!m) return n;
+  if(!n) return m;
+  let prev = Array.from({length:n+1}, (_,j) => j), cur = new Array(n+1);
+  for(let i=1;i<=m;i++){
+    cur[0] = i;
+    for(let j=1;j<=n;j++)
+      cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+    const t = prev; prev = cur; cur = t;
+  }
+  return prev[n];
+}
+const tolerancia = w => w.length <= 4 ? 0 : w.length <= 7 ? 1 : 2;
+
+/* ==== ODPOVEDE – generované skriptom _kluc-odpovedi/gen-iot-temy1-2.js ==== */
+const A_ITEMS = [
+  ["a1", "Sieť fyzických zariadení, ktoré pomocou senzorov zbierajú údaje a cez sieť ich posielajú ďalej bez zásahu človeka, sa nazýva internet <span class=\"gap\">______</span>.",
+    "Vecí. „Vecou“ môže byť teplomer, žiarovka, auto, stroj vo fabrike aj kvetináč.",
+    [[93,73,78,195],
+     [93,73,78,71]]],
+  ["a2", "Automat na Coca-Colu na univerzite Carnegie Mellon, ktorý cez sieť hlásil, či má studené plechovky, sa považuje za prvé IoT zariadenie – stalo sa to v roku <span class=\"gap\">______</span>.",
+    "1982. ESP8266 prišiel v roku 2014, ESP32 v roku 2016 – tie roky sú neskoršie a patria k hardvéru.",
+    [[26,21,21,28]]],
+  ["a3", "Kevin Ashton použil pojem Internet of Things v roku 1999 v súvislosti s čipmi <span class=\"gap\">______</span>.",
+    "RFID. Pojem sa teda zrodil pri označovaní tovaru, nie pri senzoroch ani pri WiFi.",
+    [[121,106,100,106]]],
+  ["a4", "Druhou z troch základných schopností IoT zariadenia je, že zariadenie <span class=\"gap\">______</span> – cez WiFi, Bluetooth, LoRa alebo mobilnú sieť.",
+    "Komunikuje. Prvá schopnosť je vnímanie okolia, tretia konanie alebo odoslanie údajov.",
+    [[64,67,64,91,65,89,90,71,89,81],
+     [64,67,64,91,65,89,90,211,80,93,84],
+     [64,67,64,91,65,89,90,93,69,85,336]]],
+  ["a5", "Čip s WiFi, ktorý bol predchodcom ESP32 a objavil sa v roku 2014, sa označuje <span class=\"gap\">______</span>.",
+    "ESP8266. Lacné čipy s WiFi sprístupnili IoT bežným ľuďom a školám.",
+    [[110,127,125,22,29,6,7],
+     [78,95,93,14,23,2,7,4]]],
+  ["a6", "Priemyselné využitie internetu vecí – monitorovanie strojov, prediktívna údržba a meranie spotreby energie – sa označuje aj ako Priemysel <span class=\"gap\">______</span>.",
+    "Priemysel 4.0. Skratka pre priemyselný internet vecí je IIoT.",
+    [[31,2,29],
+     [31,0,29]]],
+  ["a7", "Inteligentné hodinky a monitorovanie pacientov na diaľku sú príklady IoT v oblasti <span class=\"gap\">______</span>.",
+    "Zdravotníctvo. Patria sem zariadenia, ktoré merajú telesné údaje a posielajú ich lekárovi.",
+    [[81,72,95,79,89,95,69,92,222,87,65,64,88],
+     [81,72,95,79,89,95,69,92,222,87,65,64,82],
+     [81,72,95,79,89,95,69,92,90,87,65,64,88]]],
+  ["a8", "Okrem bezpečnosti, závislosti od internetu a elektronického odpadu patrí medzi riziká internetu vecí aj ochrana <span class=\"gap\">______</span>.",
+    "Súkromia. Zariadenie, ktoré stále meria, zároveň stále zbiera údaje o človeku.",
+    [[88,214,70,92,64,93,88,83],
+     [88,89,70,92,64,93,88,83],
+     [88,214,70,92,64,93,88,87]]],
+  ["a9", "Sledovanie polohy vozidiel sa v doprave rieši modulom <span class=\"gap\">______</span>.",
+    "GPS. Ďalšie príklady z dopravy: diagnostika auta a inteligentné parkovanie.",
+    [[108,124,126]]]
+];
+
+const B_ITEMS = [
+  ["b1", "IoT systém sa vysvetľuje po vrstvách; spolu sa uvádzajú <span class=\"gap\">______</span> vrstvy.",
+    "Štyri: vrstva zariadení, sieťová, cloudová a aplikačná.",
+    [[330,88,84,92,70],
+     [88,88,84,92,70],
+     [31]]],
+  ["b2", "Vrstva, v ktorej sú senzory, aktory a mikrokontrolér, sa nazýva vrstva zariadení, inak aj <span class=\"gap\">______</span> vrstva.",
+    "Percepčná. Práve v nej údaje vznikajú a práve v nej sa aj spína.",
+    [[91,73,95,77,74,64,316,92,210],
+     [91,73,95,77,74,64,82,92,82],
+     [91,73,95,77,74,64,316,92,86,94]]],
+  ["b3", "Vrstva, ktorá zabezpečuje prenos údajov cez WiFi, Zigbee alebo LoRaWAN, sa nazýva <span class=\"gap\">______</span> vrstva.",
+    "Sieťová. Údaje často prechádzajú cez bránu – router alebo Raspberry Pi.",
+    [[88,69,72,331,64,70,208],
+     [88,69,72,90,64,70,80],
+     [88,69,72,331,64,70,84,88]]],
+  ["b4", "Vrstva, ktorá údaje ukladá do databázy a spracováva ich podľa pravidiel – napríklad ThingSpeak alebo Home Assistant – sa nazýva <span class=\"gap\">______</span> vrstva.",
+    "Cloudová, inak aj serverová.",
+    [[72,64,66,91,75,95,71,211],
+     [88,73,95,88,74,66,94,68,210],
+     [72,64,66,91,75,95,71,83],
+     [72,64,66,91,75,95,71,87,89]]],
+  ["b5", "Vrstva, ktorú vidí používateľ – webový dashboard, mobilná aplikácia a upozornenia – sa nazýva <span class=\"gap\">______</span> vrstva.",
+    "Aplikačná. Je to jediná vrstva, s ktorou človek pracuje priamo.",
+    [[74,92,65,71,68,81,316,92,210],
+     [74,92,65,71,68,81,82,92,82],
+     [74,92,65,71,68,81,316,92,86,94]]],
+  ["b6", "Zariadenie, cez ktoré údaje zo senzorovej siete prechádzajú do internetu – napríklad router alebo Raspberry Pi – sa nazýva <span class=\"gap\">______</span>.",
+    "Brána, po anglicky gateway.",
+    [[73,94,204,64,78],
+     [76,77,89,75,88,81,72],
+     [73,94,76,64,78]]],
+  ["b7", "Prvok, ktorý mení elektrický signál na činnosť – relé, servomotor, bzučiak či OLED displej – sa nazýva <span class=\"gap\">______</span>.",
+    "Aktor. Opakom je senzor, ktorý fyzikálnu veličinu mení na elektrický signál.",
+    [[74,71,89,65,93],
+     [74,71,288,64,210,16,316,94,86,90],
+     [74,71,89,91,206,68,94,64]]],
+  ["b8", "Senzor PIR zaznamenáva <span class=\"gap\">______</span>.",
+    "Pohyb. Vzdialenosť meria HC-SR04, tlak BME280, teplotu a vlhkosť DHT22.",
+    [[91,67,69,87,77]]],
+  ["b9", "Výstup senzora je buď digitálny (0/1, I2C, SPI, 1-Wire), alebo <span class=\"gap\">______</span>, teda napätie.",
+    "Analógový. Analógový výstup treba previesť prevodníkom ADC na číslo.",
+    [[74,66,76,66,220,87,94,68,206],
+     [74,66,76,66,64,87,94,68,74],
+     [74,66,76,66,220,87,94,68,206,20,70,95,80,86,216,86]]]
+];
+
+const C_ITEMS = [
+  ["c1", "ESP32 aj bežná domáca WiFi pracujú v pásme <span class=\"gap\">______</span> GHz.",
+    "2,4 GHz. Sieť, ktorá vysiela len na 5 GHz, je pre ESP32 nepoužiteľná.",
+    [[25,0,25],
+     [25,2,25]]],
+  ["c2", "Technológia s dosahom jednotky až desiatky kilometrov, veľmi nízkou prenosovou rýchlosťou aj spotrebou sa nazýva <span class=\"gap\">______</span>.",
+    "LoRa; siete na nej postavené sa označujú LoRaWAN. Používa sa v poľnohospodárstve a pri meraní na širokom území.",
+    [[103,67,127,79],
+     [103,67,127,79,120,113,127]]],
+  ["c3", "Úsporná verzia Bluetoothu, ktorá sa používa v nositeľnej elektronike, sa označuje skratkou <span class=\"gap\">______</span>.",
+    "BLE – Bluetooth Low Energy.",
+    [[105,96,104],
+     [105,64,88,75,91,95,94,70,91,20,121,89,64,24,124,84,94,78,90,71]]],
+  ["c4", "Najčastejšie používaný IoT protokol, ktorý pracuje na princípe publish/subscribe, sa nazýva <span class=\"gap\">______</span>.",
+    "MQTT. Je úsporný a rýchly – na rozdiel od protokolu HTTP, ktorý je „hovorný“.",
+    [[102,125,121,122]]],
+  ["c5", "Centrálny server, ktorý v protokole MQTT prenáša správy medzi zariadeniami, sa nazýva <span class=\"gap\">______</span>.",
+    "Broker. Známy program, ktorý ho robí, je Mosquitto.",
+    [[73,94,66,69,74,66]]],
+  ["c6", "Adresa správy v protokole MQTT – napríklad skola/ucebna12/teplota – sa nazýva <span class=\"gap\">______</span>.",
+    "Topic, po slovensky téma. Správu dostane každý, kto je na odber danej témy prihlásený.",
+    [[95,67,93,71,76],
+     [95,197,64,79]]],
+  ["c7", "Formát údajov, v ktorom sa posiela zápis {\"teplota\": 22.5, \"vlhkost\": 41}, sa nazýva <span class=\"gap\">______</span>.",
+    "JSON. Je čitateľný pre človeka aj pre program.",
+    [[97,127,98,96]]],
+  ["c8", "Aktualizácia firmvéru na diaľku, bez pripojenia káblom, sa označuje skratkou <span class=\"gap\">______</span>.",
+    "OTA – Over-The-Air.",
+    [[100,120,108],
+     [100,90,72,92,2,100,89,87,30,117,92,68]]],
+  ["c9", "Protokol MQTT sa šifruje pomocou <span class=\"gap\">______</span>.",
+    "TLS. Zápis sa uvádza ako „MQTT cez TLS“; u protokolu HTTP je šifrovaná verzia HTTPS.",
+    [[127,96,126],
+     [120,127,97]]],
+  ["c10", "Prvým pravidlom bezpečnosti IoT zariadenia je zmeniť <span class=\"gap\">______</span> heslá.",
+    "Predvolené (výrobné) heslá. Zariadenie s pôvodným heslom sa dá nájsť a prevziať automaticky.",
+    [[91,94,72,74,89,95,93,87,93,221],
+     [93,209,95,65,77,94,216],
+     [79,73,75,79,90,92,69,92,218],
+     [91,94,72,74,89,95,93,87,93,81]]]
+];
+
+const INE_SLOVA = [[124,69,107,71],
+  [105,64,88,75,91,95,94,70,91],
+  [110,88,69,75,93,94,84,70],
+  [110,127,125,29,29],
+  [110,127,125,22,29,6,7],
+  [121,106,100,106],
+  [72,64,66,91,75],
+  [88,73,95,88,74,66],
+  [89,67,88,90,74,66],
+  [70,67,73,75,66],
+  [88,91,68,90,76,88],
+  [103,120,104],
+  [30,107],
+  [108,124,126],
+  [113,69,74,76,74,85],
+  [127,68,95,75,78,84],
+  [103,67,127,79,120,113,127],
+  [101,110,0,103,64,100],
+  [88,73,67,84,64,66],
+  [88,66,192,67,78,317],
+  [74,71,89,65,93],
+  [73,94,204,64,78],
+  [76,77,89,75,88,81,72],
+  [95,67,93,71,76],
+  [73,94,66,69,74,66],
+  [102,125,121,122],
+  [99,120,121,126],
+  [99,120,121,126,124],
+  [124,73,79,125,64,83,90,87,71],
+  [97,127,98,96],
+  [115,97,97],
+  [127,96,126],
+  [100,120,108],
+  [125,96,108,96],
+  [108,105,121],
+  [123,99,126,122],
+  [70,69,70,92,64,91,94,92,71,70,90,90,222,74],
+  [89,73,65,199],
+  [88,69,72,331,64,70,208],
+  [72,64,66,91,75,95,71,211],
+  [74,92,65,71,68,81,316,92,210],
+  [91,73,95,77,74,64,316,92,210],
+  [81,77,95,71,78,84,84,92,222],
+  [95,73,93,66,64,68,80],
+  [95,64,76,69],
+  [79,69,74,71,91,209,93,92,74],
+  [88,90,72,90,67,95],
+  [91,67,69,87,77],
+  [93,64,69,69,64,67,340],
+  [93,86,73,71,78,92,84,92,92,71,336],
+  [106,104,110],
+  [111,109,110],
+  [123,123,96],
+  [98,30,110],
+  [120,124,100],
+  [98,101,66,122],
+  [73,73,87,94,74,317,95,93,64,337],
+  [88,214,70,92,64,93,88,87],
+  [68,72,93,79,75],
+  [78,66,72,92,72,85,69,91,88,85],
+  [79,67,93,92,78,70,80],
+  [81,72,95,79,89,95,69,92,222,87,65,64,88],
+  [95,94,68],
+  [91,200,328],
+  [91,94,68,75,66,73,66,87,95],
+  [70,73,94,90,64],
+  [79,67,64,207,76,94,94,65,342],
+  [91,67,275,64,64,88,94,65,67,91,81,215,69,75,77,76,84],
+  [93,66,192,67,78],
+  [64,67,67,207],
+  [70,73,95,71,78]];
+
+/* otázok spolu: 28  (A 9 · B 9 · C 10) */
+/* ==== KONIEC generovaného bloku ==== */
+
+/* všetky pojmy z testu – odpoveď sa nesmie uznať, ak sedí na iný z nich */
+let SLOVNIK = null;
+function slovnik(){
+  if(!SLOVNIK){
+    const z = [].concat(A_ITEMS, B_ITEMS, C_ITEMS)
+      .reduce((acc, it) => acc.concat(it[3].map(dek)), [])
+      .concat(INE_SLOVA.map(dek));
+    SLOVNIK = Array.from(new Set(z.map(norm))).filter(Boolean);
+  }
+  return SLOVNIK;
+}
+/* prvý uvedený tvar je ten, ktorý sa pri nesprávnej odpovedi zobrazí ako správny */
+function spravneSlovo(items, key){
+  const it = items.find(x => x[0] === key);
+  return dek(it[3][0]);
+}
+function sediSlovo(items, key, vpisane){
+  const v = norm(vpisane);
+  if(!v) return false;
+  const it = items.find(x => x[0] === key);
+  const tvary = it[3].map(a => norm(dek(a)));
+  let best = Infinity, uzna = false;
+  for(const t of tvary){
+    const d = lev(v, t);
+    if(d < best) best = d;
+    if(d <= tolerancia(t)) uzna = true;     // chyba sa odpúšťa podľa dĺžky daného tvaru
+  }
+  if(best === 0) return true;
+  if(!uzna) return false;
+  for(const iny of slovnik()){
+    if(tvary.indexOf(iny) !== -1) continue;
+    if(lev(v, iny) <= best) return false;   // bližšie k inému pojmu – neuzná sa
+  }
+  return true;
+}
+
+/* ================= stav ================= */
+const state = {a:{}, b:{}, c:{}};
+let checked = false;
+let locked = false;
+let lockReason = "";          // "" | "cas" | "ziak"
+let started = 0;              // čas prvého otvorenia
+let elapsedAtLock = null;     // koľko trvalo riešenie
+const LIMIT_MIN = 35;
+const LIMIT_MS = LIMIT_MIN * 60 * 1000;
+const KEY = "test-iot-temy-1-2-v1";
+
+/* ===== učiteľský reštart =====================================================
+   Vymaže uložené odpovede, uzamknutie aj odpočet času – funguje aj po odovzdaní.
+   Dva spôsoby:  1) k adrese pridať ?novy      2) stlačiť Ctrl + Alt + N
+   ========================================================================== */
+const CLEAN_URL = location.href.split(/[?#]/)[0];
+function wipeStore(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+if(/(^|[?&#])novy(=|&|$)/.test(location.search + location.hash)){
+  wipeStore();
+  try{ history.replaceState(null, "", CLEAN_URL); }catch(e){}
+}
+document.addEventListener("keydown", ev => {
+  if(ev.ctrlKey && ev.altKey && (ev.key === "n" || ev.key === "N")){
+    ev.preventDefault();
+    if(confirm("Spustiť odznova?\n\nVymažú sa uložené odpovede, hodnotenie, údaje v hlavičke " +
+               "aj odpočet času – test sa spustí s plnými " + LIMIT_MIN + " minútami."))
+    {
+      wipeStore();
+      location.replace(CLEAN_URL);
+    }
+  }
+});
+console.info("Učiteľský reštart: Ctrl+Alt+N alebo adresa s ?novy");
+
+const MAX = {a:A_ITEMS.length, b:B_ITEMS.length, c:C_ITEMS.length};
+const SLOVNE = [["a", A_ITEMS, () => state.a], ["b", B_ITEMS, () => state.b],
+  ["c", C_ITEMS, () => state.c]];
+const NAZVY = {a:"A · Úvod do IoT", b:"B · Vrstvy, senzory a aktory",
+  c:"C · Technológie, protokoly a bezpečnosť"};
+
+/* ---------- A, B, C – dopisovanie slov ---------- */
+function vykresliSlova(host, pfx, items, store){
+  items.forEach(([key, veta], i) => {
+    const q = document.createElement("div");
+    q.className = "q"; q.dataset.key = pfx + "-" + key;
+    q.innerHTML =
+      '<div class="qh"><span class="qn">' + pfx.toUpperCase() + (i+1) + '</span>' +
+      '<span class="qt">' + veta + '</span></div>' +
+      '<div class="textrow"><input type="text" autocomplete="off" spellcheck="false" ' +
+      'placeholder="doplniť slovo" ' +
+      'aria-label="' + esc(veta.replace(/<[^>]+>/g,"")) + '"></div>' +
+      '<div class="corr"></div>';
+    const inp = q.querySelector("input");
+    inp.addEventListener("input", () => {
+      if(locked){ inp.value = store[key] || ""; return; }
+      store[key] = inp.value;
+      clearCheck(); refresh(); save();
+    });
+    host.appendChild(q);
+  });
+}
+vykresliSlova(el("lista"), "a", A_ITEMS, state.a);
+vykresliSlova(el("listb"), "b", B_ITEMS, state.b);
+vykresliSlova(el("listc"), "c", C_ITEMS, state.c);
+
+/* ================= postup ================= */
+const TOTAL = MAX.a + MAX.b + MAX.c;
+el("total").textContent = TOTAL;
+
+function answered(){
+  let n = 0;
+  SLOVNE.forEach(([, items, store]) => {
+    items.forEach(([k]) => { if((store()[k] || "").trim()) n++; });
+  });
+  return n;
+}
+function refresh(){
+  const n = answered();
+  el("done").textContent = n;
+  const f = el("fill");
+  f.style.width = (n / TOTAL * 100) + "%";
+  f.classList.toggle("done", n === TOTAL);
+}
+function bodySlovo(n){ return n + (n === 1 ? " bod" : n < 5 ? " body" : " bodov"); }
+function clearCheck(){
+  if(!checked) return;
+  checked = false;
+  el("result").classList.remove("on");
+  document.querySelectorAll(".q").forEach(q => q.classList.remove("ok","bad"));
+  document.querySelectorAll(".corr").forEach(c => { c.classList.remove("on"); c.innerHTML = ""; });
+  document.querySelectorAll(".score").forEach(s => s.classList.remove("on"));
+  el("s-a").textContent = bodySlovo(MAX.a);
+  el("s-b").textContent = bodySlovo(MAX.b);
+  el("s-c").textContent = bodySlovo(MAX.c);
+}
+
+/* ================= časomiera ================= */
+let tickT = null;
+function fmtMMSS(ms){
+  if(ms < 0) ms = 0;
+  const s = Math.round(ms / 1000);
+  return String(Math.floor(s / 60)).padStart(2,"0") + ":" + String(s % 60).padStart(2,"0");
+}
+function zostava(){ return LIMIT_MS - (Date.now() - started); }
+function stopClock(){ if(tickT){ clearInterval(tickT); tickT = null; } }
+function paintClock(){
+  const c = el("clock"), v = el("clockv");
+  if(locked){
+    stopClock();
+    c.className = "clock off";
+    v.textContent = lockReason === "cas" ? "čas vypršal"
+      : "čas: " + fmtMMSS(elapsedAtLock === null ? 0 : elapsedAtLock);
+    return;
+  }
+  const z = zostava();
+  v.textContent = fmtMMSS(z);
+  c.className = "clock" + (z <= 60000 ? " crit" : z <= 300000 ? " warn" : "");
+  if(z <= 0) casVyprsal();
+}
+function startClock(){
+  stopClock();
+  paintClock();
+  if(!locked) tickT = setInterval(paintClock, 1000);
+}
+function casVyprsal(){
+  if(locked) return;
+  stopClock();
+  lockReason = "cas";
+  elapsedAtLock = LIMIT_MS;
+  lockUI();
+  save();
+  showResult();
+  toast("Čas vypršal – test bol uzamknutý a vyhodnotený.");
+}
+
+/* ================= vyhodnotenie ================= */
+function grade(p){ return p >= 90 ? 1 : p >= 75 ? 2 : p >= 50 ? 3 : p >= 30 ? 4 : 5; }
+const GRADE_NAME = {1:"výborný",2:"chválitebný",3:"dobrý",4:"dostatočný",5:"nedostatočný"};
+
+function evaluate(){
+  const res = {a:0, b:0, c:0, detail:{}, chyby:[]};
+  /* dopisované slová – uznáva sa aj drobná pravopisná chyba */
+  const slovnaCast = (pfx, items, store) => {
+    let body = 0;
+    items.forEach(([key]) => {
+      const q = document.querySelector('.q[data-key="' + pfx + '-' + key + '"]');
+      q.classList.remove("ok","bad");
+      const v = (store[key] || "").trim();
+      if(!v){ res.detail[pfx + "-" + key] = null; return; }
+      const good = sediSlovo(items, key, v);
+      q.classList.add(good ? "ok" : "bad");
+      res.detail[pfx + "-" + key] = good;
+      if(good) body++;
+    });
+    return body;
+  };
+  SLOVNE.forEach(([pfx, items, store]) => { res[pfx] = slovnaCast(pfx, items, store()); });
+
+  res.total = res.a + res.b + res.c;
+  res.max = TOTAL;
+  res.pct = Math.round(res.total / res.max * 1000) / 10;
+  res.grade = grade(res.pct);
+  return res;
+}
+
+/* ---------- doplnenie správnych odpovedí k otázkam ---------- */
+function ukazSpravne(r){
+  SLOVNE.forEach(([pfx, items]) => {
+    items.forEach(([key, veta, preco]) => {
+      const q = document.querySelector('.q[data-key="' + pfx + '-' + key + '"]');
+      const box = q.querySelector(".corr");
+      const s = spravneSlovo(items, key);
+      if(r.detail[pfx + "-" + key] === true){
+        box.classList.remove("on"); box.innerHTML = "";
+      } else {
+        box.innerHTML = '<b>Správne:</b> ' + esc(s) +
+          (preco ? '<span class="why">' + preco + '</span>' : "");
+        box.classList.add("on");
+        r.chyby.push([pfx.toUpperCase(), veta.replace(/<[^>]+>/g,""), s]);
+      }
+    });
+  });
+}
+
+/* ================= uzamknutie ================= */
+function lockUI(){
+  locked = true;
+  stopClock();
+  document.querySelectorAll("#lista input, #listb input, #listc input")
+    .forEach(x => { x.disabled = true; });
+  el("reset").style.display = "none";
+  el("warn").style.display = "none";
+  el("lockmsg").classList.add("on");
+  el("lockmsg").textContent = lockReason === "cas" ? "Čas vypršal – uzamknuté" : "Test je uzamknutý";
+  el("check").textContent = "Stiahnuť ako Word";
+  el("export2").textContent = "Stiahnuť ako Word";
+  paintClock();
+}
+function finish(){
+  if(locked) return true;
+  if(!confirm("Ukončiť test a vyhodnotiť?\n\nOdpovede sa uzamknú a už sa nebudú dať meniť. " +
+              "Potom sa zobrazí výsledok, správne odpovede a test sa dá stiahnuť ako dokument Wordu."))
+    return false;
+  lockReason = "ziak";
+  elapsedAtLock = Date.now() - started;
+  lockUI();
+  save();
+  showResult();
+  return true;
+}
+function showResult(scroll){
+  const r = evaluate();
+  ukazSpravne(r);
+  checked = true;
+  el("r-body").textContent = r.total + " / " + r.max;
+  el("r-pct").textContent = String(r.pct).replace(".", ",") + " %";
+  el("r-znamka").textContent = r.grade + " – " + GRADE_NAME[r.grade];
+  el("r-cas").textContent = lockReason === "cas"
+    ? "vypršal"
+    : fmtMMSS(elapsedAtLock === null ? 0 : elapsedAtLock);
+  el("r-brk").innerHTML = ["a","b","c"].map(p =>
+    '<div><span>' + NAZVY[p] + '</span><span>' + r[p] + ' / ' + MAX[p] + '</span></div>').join("");
+  el("r-rep").innerHTML = r.chyby.length
+    ? '<h4>Na zopakovanie · ' + r.chyby.length + ' ' +
+      (r.chyby.length === 1 ? "otázka" : r.chyby.length < 5 ? "otázky" : "otázok") + '</h4>' +
+      '<ul>' + r.chyby.map(([c, t, s]) =>
+        '<li><b>' + c + '</b> · ' + esc(t) + ' → <b>' + esc(String(s)) + '</b></li>').join("") + '</ul>' +
+      '<p style="font-size:.9rem;color:var(--muted);margin:.6em 0 0">Správne odpovede aj vysvetlenie ' +
+      'sú doplnené priamo pri otázkach nižšie.</p>'
+    : '<p class="allok">Všetky odpovede sú správne – nie je čo opakovať.</p>';
+  el("s-a").textContent = r.a + " / " + MAX.a + " b";
+  el("s-b").textContent = r.b + " / " + MAX.b + " b";
+  el("s-c").textContent = r.c + " / " + MAX.c + " b";
+  document.querySelectorAll(".score").forEach(s => s.classList.add("on"));
+  el("result").classList.add("on");
+  if(scroll !== false) el("result").scrollIntoView({behavior:"smooth", block:"start"});
+  return r;
+}
+el("check").addEventListener("click", () => { if(locked) doExport(); else finish(); });
+
+/* ================= ukladanie ================= */
+let storeOK = true;
+const val = id => el(id).value.trim();
+function save(){
+  if(!storeOK) return;
+  try{
+    localStorage.setItem(KEY, JSON.stringify({
+      meno:val("meno"), trieda:val("trieda"), datum:val("datum"), state:state,
+      locked:locked, started:started, reason:lockReason, elapsed:elapsedAtLock
+    }));
+  }catch(e){ storeOK = false; }
+}
+function load(){
+  let raw = null;
+  try{ raw = localStorage.getItem(KEY); }catch(e){ storeOK = false; return; }
+  if(!raw) return;
+  let d;
+  try{ d = JSON.parse(raw); }catch(e){ return; }
+  if(d.meno) el("meno").value = d.meno;
+  if(d.trieda) el("trieda").value = d.trieda;
+  if(d.datum) el("datum").value = d.datum;
+  if(d.started) started = d.started;
+  if(d.reason) lockReason = d.reason;
+  if(typeof d.elapsed === "number") elapsedAtLock = d.elapsed;
+  const s = d.state || {};
+  SLOVNE.forEach(([pfx, items, store]) => {
+    items.forEach(([key]) => {
+      const v = (s[pfx] || {})[key];
+      if(v === undefined) return;
+      store()[key] = v;
+      document.querySelector('.q[data-key="' + pfx + '-' + key + '"] input').value = v;
+    });
+  });
+  if(d.locked) lockUI();
+}
+["meno","trieda","datum"].forEach(id => {
+  el(id).addEventListener("input", () => {
+    save();
+    if(id === "meno") el("f-meno").classList.remove("missing");
+  });
+});
+
+el("reset").addEventListener("click", () => {
+  if(locked) return;
+  if(!confirm("Vymazať všetky odpovede aj údaje v hlavičke?\n\nOdpočet času sa tým nevynuluje – " +
+              "na nový pokus s plným časom slúži učiteľský reštart.")) return;
+  try{ localStorage.setItem(KEY, JSON.stringify({meno:val("meno"), trieda:val("trieda"),
+    datum:val("datum"), state:{a:{},b:{},c:{}}, locked:false, started:started,
+    reason:"", elapsed:null})); }catch(e){}
+  location.reload();
+});
+
+/* ================= toast ================= */
+let toastT;
+function toast(msg){
+  const t = el("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove("on"), 4200);
+}
+
+/* ================= export ================= */
+const slug = s => s.normalize("NFD").replace(RE_DIAK, "")
+  .replace(/[^A-Za-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "bez-mena";
+function skDate(iso){
+  if(!iso) return "";
+  const p = iso.split("-");
+  return p.length === 3 ? (+p[2]) + ". " + (+p[1]) + ". " + p[0] : iso;
+}
+const mark = ok => ok === true ? "✔" : ok === false ? "✘" : "–";
+
+function riadky(r){
+  let b = "";
+  SLOVNE.forEach(([pfx, items, store]) => {
+    b += '<p class="sec">' + NAZVY[pfx] + '</p>';
+    items.forEach((it, i) => {
+      const key = it[0], v = String(store()[key] || "").trim();
+      const ok = r.detail[pfx + "-" + key];
+      b += '<p class="row"><span class="n">' + pfx.toUpperCase() + (i + 1) + '.</span> ' +
+           esc(String(it[1]).replace(/<[^>]+>/g,"______")) + '<br>' +
+           '&nbsp;&nbsp;&nbsp;→ <b>' + (v ? esc(v) : "nevyplnené") + '</b> ' +
+           '<span class="m">' + mark(ok) + '</span>' +
+           (ok === true ? "" :
+             '<br>&nbsp;&nbsp;&nbsp;<span class="corr2">správne: ' +
+             esc(spravneSlovo(items, key)) + '</span>') +
+           '</p>';
+    });
+  });
+  return b;
+}
+
+function buildDoc(r){
+  const casTxt = lockReason === "cas"
+    ? "čas vypršal (" + LIMIT_MIN + " min)"
+    : fmtMMSS(elapsedAtLock === null ? 0 : elapsedAtLock) + " z " + LIMIT_MIN + " min";
+  return '<html xmlns:o="urn:schemas-microsoft-com:office:office" ' +
+    'xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
+    '<head><meta charset="utf-8"><title>Iot_temy1,2</title><style>' +
+    '@page{size:A4;margin:2cm}' +
+    'body{font-family:"Calibri",sans-serif;font-size:10.5pt;color:#000}' +
+    'h1{font-family:"Arial",sans-serif;font-size:16pt;margin:0 0 3pt}' +
+    '.sub{font-size:9.5pt;color:#555;margin:0 0 12pt}' +
+    '.meta{font-size:10.5pt;margin:0 0 3pt}' +
+    '.box{border:1pt solid #000;padding:7pt;margin:10pt 0 14pt;font-size:11pt}' +
+    '.sec{font-family:"Arial",sans-serif;font-size:12pt;font-weight:bold;margin:16pt 0 7pt;' +
+      'border-bottom:0.75pt solid #999;padding-bottom:2pt}' +
+    '.row{margin:0 0 4pt}' +
+    '.n{font-family:"Consolas",monospace;color:#555}' +
+    '.m{font-weight:bold}' +
+    '.corr2{font-size:9.5pt;color:#1C6B2E}' +
+    '</style></head><body>' +
+    '<h1>Iot_temy1,2</h1>' +
+    '<p class="sub">Internet vecí · poznámky IoT a ESP32, témy 1 a 2 · dopisovanie slov · limit ' +
+      LIMIT_MIN + ' minút</p>' +
+    '<p class="meta"><b>Meno a priezvisko:</b> ' + (esc(val("meno")) || "&nbsp;") + '</p>' +
+    '<p class="meta"><b>Trieda:</b> ' + (esc(val("trieda")) || "&nbsp;") +
+      '&nbsp;&nbsp;&nbsp;<b>Dátum:</b> ' + (esc(skDate(val("datum"))) || "&nbsp;") +
+      '&nbsp;&nbsp;&nbsp;<b>Čas riešenia:</b> ' + casTxt + '</p>' +
+    '<div class="box"><b>Vyhodnotenie:</b> ' + r.total + ' z ' + r.max +
+      ' bodov &nbsp;·&nbsp; ' + String(r.pct).replace(".", ",") + ' % &nbsp;·&nbsp; známka ' +
+      r.grade + ' – ' + GRADE_NAME[r.grade] + '<br>' +
+      '<span style="font-size:9.5pt">A: ' + r.a + '/' + MAX.a + ' &nbsp; B: ' + r.b + '/' + MAX.b +
+      ' &nbsp; C: ' + r.c + '/' + MAX.c +
+      ' &nbsp;·&nbsp; na zopakovanie: ' + r.chyby.length + '</span></div>' +
+    riadky(r) + '</body></html>';
+}
+
+function buildPlain(r){
+  const L = [];
+  L.push("IOT_TEMY1,2");
+  L.push("Internet vecí · poznámky IoT a ESP32, témy 1 a 2 · limit " + LIMIT_MIN + " minút");
+  L.push("Meno a priezvisko: " + (val("meno") || "—"));
+  L.push("Trieda: " + (val("trieda") || "—") + "    Dátum: " + (skDate(val("datum")) || "—"));
+  L.push("Čas riešenia: " + (lockReason === "cas" ? "čas vypršal"
+    : fmtMMSS(elapsedAtLock === null ? 0 : elapsedAtLock)));
+  L.push("Vyhodnotenie: " + r.total + " / " + r.max + " b · " + r.pct + " % · známka " + r.grade);
+  SLOVNE.forEach(([pfx, items, store]) => {
+    L.push("", "== " + NAZVY[pfx].toUpperCase() + " ==");
+    items.forEach((it, i) => {
+      const key = it[0], v = String(store()[key] || "").trim();
+      const ok = r.detail[pfx + "-" + key];
+      L.push(pfx.toUpperCase() + (i+1) + ". " + String(it[1]).replace(/<[^>]+>/g,"______") +
+        "\n   -> " + (v || "nevyplnené") + "  " + mark(ok) +
+        (ok === true ? "" : "\n   spravne: " + spravneSlovo(items, key)));
+    });
+  });
+  return L.join("\n");
+}
+
+function doExport(){
+  if(!val("meno")){
+    el("f-meno").classList.add("missing");
+    el("meno").focus();
+    window.scrollTo({top:0, behavior:"smooth"});
+    toast("Do dokumentu treba meno – pole je hore v hlavičke.");
+    return;
+  }
+  if(!finish()) return;
+  const r = showResult(false);
+  const name = "Iot_temy1-2_" + slug(val("meno")) + ".doc";
+  try{
+    const blob = new Blob(["﻿" + buildDoc(r)], {type:"application/msword"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = name; a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500);
+    toast("Uložené ako " + name + " – otvoriť vo Worde.");
+  }catch(e){
+    el("fbtext").value = buildPlain(r);
+    el("fb").classList.add("on");
+    el("fb").scrollIntoView({behavior:"smooth", block:"center"});
+    toast("Sťahovanie sa nespustilo. Text je pripravený na skopírovanie dole.");
+  }
+}
+el("export2").addEventListener("click", doExport);
+el("showfb").addEventListener("click", () => {
+  if(!finish()) return;
+  const r = showResult(false);
+  el("fbtext").value = buildPlain(r);
+  el("fb").classList.add("on");
+});
+
+/* ================= štart ================= */
+load();
+if(!started){ started = Date.now(); save(); }      // odpočet sa spustí prvým otvorením
+if(locked){
+  showResult(false);
+} else if(zostava() <= 0){                          // stránka otvorená po vypršaní času
+  casVyprsal();
+}
+if(!val("datum")){
+  const d = new Date();
+  el("datum").value = d.getFullYear() + "-" +
+    String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+refresh();
+startClock();
+</script>
+
+</body>
+</html>
